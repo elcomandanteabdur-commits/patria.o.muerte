@@ -30,3 +30,6 @@ if(cv){const x=cv.getContext('2d'),inp=document.getElementById('ptext');
   x.fillText(w,300,650);x.font='24px "Special Elite",monospace';x.fillText('HASTA LA VICTORIA SIEMPRE',300,720)}
  inp.oninput=draw;draw();document.fonts?.ready.then(draw);
  document.getElementById('pdl').onclick=()=>{const a=document.createElement('a');a.download='poster.png';a.href=cv.toDataURL();a.click()}}
+if ('serviceWorker' in navigator) {
+  addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
+}
