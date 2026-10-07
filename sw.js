@@ -1,5 +1,5 @@
 // patria.o.muerte - service worker
-const CACHE = 'patria-o-muerte-v1';
+const CACHE = 'patria-o-muerte-v2';
 const FILES = [
   './', './index.html', './biography.html', './diaries.html', './revolution.html',
   './last-campaign.html', './words.html', './gallery.html', './voices.html',
