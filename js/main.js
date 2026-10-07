@@ -30,6 +30,65 @@ if(cv){const x=cv.getContext('2d'),inp=document.getElementById('ptext');
   x.fillText(w,300,650);x.font='24px "Special Elite",monospace';x.fillText('HASTA LA VICTORIA SIEMPRE',300,720)}
  inp.oninput=draw;draw();document.fonts?.ready.then(draw);
  document.getElementById('pdl').onclick=()=>{const a=document.createElement('a');a.download='poster.png';a.href=cv.toDataURL();a.click()}}
+/* =========================================
+   LIVE MEMBER COUNT
+   ========================================= */
+
+const memberCountEl = document.getElementById('memberCount');
+
+if (memberCountEl) {
+  (async () => {
+    try {
+      const [
+        { initializeApp },
+        { getFirestore, doc, onSnapshot },
+        configModule
+      ] = await Promise.all([
+        import('https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js'),
+        import('https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js'),
+        import('../config.js')
+      ]);
+
+      const firebaseConfig =
+        configModule.firebaseConfig || configModule.default;
+
+      if (!firebaseConfig || !firebaseConfig.projectId) {
+        throw new Error('Invalid Firebase configuration');
+      }
+
+      const app = initializeApp(firebaseConfig);
+      const db = getFirestore(app);
+
+      const statsRef = doc(db, 'stats', 'public');
+
+      onSnapshot(
+        statsRef,
+        snapshot => {
+          if (!snapshot.exists()) {
+            memberCountEl.textContent = '—';
+            return;
+          }
+
+          const count = snapshot.data().memberCount;
+
+          if (Number.isInteger(count)) {
+            memberCountEl.textContent = count.toLocaleString('en-IN');
+          } else {
+            memberCountEl.textContent = '—';
+          }
+        },
+        error => {
+          console.error('[members] Live count failed:', error);
+          memberCountEl.textContent = '—';
+        }
+      );
+
+    } catch (error) {
+      console.error('[members] Firebase initialization failed:', error);
+      memberCountEl.textContent = '—';
+    }
+  })();
+}
 if ('serviceWorker' in navigator) {
   addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
-}
+    }
